@@ -28,7 +28,7 @@ public class CategoryBusinessRules {
             throw new BusinessException("Category name exists !");
         }
     }
-    public void CategoryShouldBeExistWhenSelected(int categoryId)
+    public void categoryShouldBeExistWhenSelected(int categoryId)
     {
         Optional<Category> category = categoryDal.findById(categoryId);
 

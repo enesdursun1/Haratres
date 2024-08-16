@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class CustomUserDetail implements UserDetails {
 
+	private int userId;
 	private String username;
 	private String password;
 	
@@ -17,6 +18,7 @@ public class CustomUserDetail implements UserDetails {
 	
 	
 	public CustomUserDetail(User user) {
+		this.userId = user.getUserId();
 		this.username=user.getUsername();
 		this.password=user.getPassword();
 	    this.roles=user.getRoles().stream().map(role->new SimpleGrantedAuthority(role.getRoleName())).collect(Collectors.toList());
@@ -40,6 +42,10 @@ public class CustomUserDetail implements UserDetails {
 	public String getUsername() {
 		// TODO Auto-generated method stub
 		return username;
+	}
+	public int getUserId() {
+
+		return userId;
 	}
 
 }

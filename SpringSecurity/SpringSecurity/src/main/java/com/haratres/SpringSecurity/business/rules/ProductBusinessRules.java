@@ -18,7 +18,7 @@ public class ProductBusinessRules {
     private CategoryBusinessRules categoryBusinessRules;
 
     public void categoryShouldBeExistWhenSelected(int categoryId) {
-       categoryBusinessRules.CategoryShouldBeExistWhenSelected(categoryId);
+       categoryBusinessRules.categoryShouldBeExistWhenSelected(categoryId);
     }
 
 

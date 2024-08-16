@@ -41,7 +41,7 @@ public class CategoryManager implements CategoryService {
 	@Override
 	public GetByIdCategoryResponse getById(GetByIdCategoryRequest getByIdCategoryRequest) {
 
-		categoryBusinessRules.CategoryShouldBeExistWhenSelected(getByIdCategoryRequest.getCategoryId());
+		categoryBusinessRules.categoryShouldBeExistWhenSelected(getByIdCategoryRequest.getCategoryId());
 
 		Category category = categoryDal.findById(getByIdCategoryRequest.getCategoryId()).get();
 		GetByIdCategoryResponse response = this.modelMapperService.forResponse().map(category, GetByIdCategoryResponse.class);
@@ -64,7 +64,7 @@ public class CategoryManager implements CategoryService {
 	@Override
 	public UpdatedCategoryResponse update(UpdateCategoryRequest updateCategoryRequest) {
 
-		categoryBusinessRules.CategoryShouldBeExistWhenSelected(updateCategoryRequest.getCategoryId());
+		categoryBusinessRules.categoryShouldBeExistWhenSelected(updateCategoryRequest.getCategoryId());
 		categoryBusinessRules.categoryNameCanNotBeDuplicatedWhenUpdated(updateCategoryRequest.getCategoryName(),updateCategoryRequest.getCategoryId());
 
 		Category category = modelMapperService.forRequest().map(updateCategoryRequest, Category.class);
@@ -77,7 +77,7 @@ public class CategoryManager implements CategoryService {
 	@Override
 	public void delete(DeleteCategoryRequest deleteCategoryRequest) {
 
-		categoryBusinessRules.CategoryShouldBeExistWhenSelected(deleteCategoryRequest.getCategoryId());
+		categoryBusinessRules.categoryShouldBeExistWhenSelected(deleteCategoryRequest.getCategoryId());
 
 		categoryDal.deleteById(deleteCategoryRequest.getCategoryId());
 	}

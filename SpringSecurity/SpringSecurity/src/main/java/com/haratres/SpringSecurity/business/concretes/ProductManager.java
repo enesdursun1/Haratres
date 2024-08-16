@@ -6,8 +6,13 @@ import com.haratres.SpringSecurity.business.abstracts.ProductService;
 import com.haratres.SpringSecurity.business.dtos.product.*;
 import com.haratres.SpringSecurity.business.rules.ProductBusinessRules;
 import com.haratres.SpringSecurity.core.utilites.mapping.ModelMapperService;
+import com.haratres.SpringSecurity.entities.concretes.CustomUserDetail;
 import com.haratres.SpringSecurity.entities.concretes.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.haratres.SpringSecurity.dataAccess.abstracts.ProductDal;
