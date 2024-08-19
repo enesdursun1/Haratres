@@ -5,6 +5,7 @@ import com.haratres.SpringSecurity.business.abstracts.ProductService;
 import com.haratres.SpringSecurity.business.dtos.cartProduct.*;
 import com.haratres.SpringSecurity.business.dtos.product.GetByIdProductRequest;
 import com.haratres.SpringSecurity.business.rules.CartProductBusinessRules;
+import com.haratres.SpringSecurity.core.helpers.auth.AuthHelper;
 import com.haratres.SpringSecurity.core.utilites.mapping.ModelMapperService;
 import com.haratres.SpringSecurity.dataAccess.abstracts.CartProductDal;
 import com.haratres.SpringSecurity.entities.concretes.CartProduct;
@@ -52,7 +53,7 @@ public class CartProductManager implements CartProductService {
     @Override
     public CreatedCartProductResponse add(CreateCartProductRequest createCartProductRequest) {
 
-        createCartProductRequest.setUserId(getuserId());
+        createCartProductRequest.setUserId(AuthHelper.getuserId());
 
         CartProduct cartProduct = modelMapperService.forRequest().map(createCartProductRequest, CartProduct.class);
 
@@ -71,7 +72,7 @@ public class CartProductManager implements CartProductService {
 
         cartProductBusinessRules.cartProductShouldBeExistWhenSelected(updateCartProductRequest.getCartProductId());
 
-        updateCartProductRequest.setUserId(getuserId());
+        updateCartProductRequest.setUserId(AuthHelper.getuserId());
 
         CartProduct cartProduct = modelMapperService.forRequest().map(updateCartProductRequest, CartProduct.class);
 
@@ -93,7 +94,7 @@ public class CartProductManager implements CartProductService {
     @Override
     public CartProductResponse addOrUpdateCartProduct(CreateCartProductRequest createCartProductRequest) {
 
-        createCartProductRequest.setUserId(getuserId());
+        createCartProductRequest.setUserId(AuthHelper.getuserId());
         if (!cartProductBusinessRules.checkProductInCart(createCartProductRequest.getProductId(),createCartProductRequest.getUserId()))
            return add(createCartProductRequest);
 
@@ -110,7 +111,7 @@ public class CartProductManager implements CartProductService {
     @Override
     public GetByUserIdCartProductWithTotalPriceResponse getListByUserId(GetByUserIdCartProductRequest getByUserIdCartProductRequest) {
 
-        getByUserIdCartProductRequest.setUserId(getuserId());
+        getByUserIdCartProductRequest.setUserId(AuthHelper.getuserId());
 
         cartProductBusinessRules.isCartEmptyForUser(getByUserIdCartProductRequest.getUserId());
 
@@ -132,21 +133,15 @@ public class CartProductManager implements CartProductService {
     @Override
     public void deleteByUserId() {
 
-     cartProductBusinessRules.isCartEmptyForUser(getuserId());
+     cartProductBusinessRules.isCartEmptyForUser(AuthHelper.getuserId());
 
-      DeleteByUserIdCartProductRequest deleteByUserIdCartProductRequest = new DeleteByUserIdCartProductRequest(getuserId());
+      DeleteByUserIdCartProductRequest deleteByUserIdCartProductRequest = new DeleteByUserIdCartProductRequest(AuthHelper.getuserId());
       cartProductDal.deleteByUser_UserId(deleteByUserIdCartProductRequest.getUserId());
 
     }
 
 
-    private int getuserId(){
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetail customUserDetail = (CustomUserDetail) authentication.getPrincipal();
-        return  customUserDetail.getUserId();
-
-    }
     private void setPrice(int productId,CartProduct cartProduct){
 
         GetByIdProductRequest getByIdProductRequest = new GetByIdProductRequest(productId);

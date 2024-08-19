@@ -2,7 +2,8 @@ package com.haratres.SpringSecurity.business.abstracts;
 
 
 
-import com.haratres.SpringSecurity.business.dtos.user.UserRegisterRequestDto;
+import com.haratres.SpringSecurity.business.dtos.user.RegisterUserRequest;
+import com.haratres.SpringSecurity.business.dtos.user.RegisteredUserResponse;
 import com.haratres.SpringSecurity.entities.concretes.User;
 
 
@@ -10,5 +11,5 @@ import com.haratres.SpringSecurity.entities.concretes.User;
 public interface UserService {
 
 	User getByUsername(String username);
-	User register(UserRegisterRequestDto userRegisterRequest);
+	RegisteredUserResponse register(RegisterUserRequest userRegisterRequest);
 }

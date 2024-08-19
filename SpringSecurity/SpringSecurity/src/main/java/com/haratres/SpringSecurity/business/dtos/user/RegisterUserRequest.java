@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRegisterRequestDto {	
+public class RegisterUserRequest {
 
 	
 	@NotBlank()

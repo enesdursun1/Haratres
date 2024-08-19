@@ -32,6 +32,7 @@ public class CategoryManager implements CategoryService {
 	public List<GetAllCategoryResponse> getAll() {
 
 		List<Category> categories = categoryDal.findAll();
+
 		List<GetAllCategoryResponse> response = categories.stream().map(
 				category -> this.modelMapperService.forResponse().map(category, GetAllCategoryResponse.class)).toList();
 

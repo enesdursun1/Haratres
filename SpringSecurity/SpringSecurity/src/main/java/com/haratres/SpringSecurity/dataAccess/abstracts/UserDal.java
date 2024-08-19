@@ -9,8 +9,9 @@ import com.haratres.SpringSecurity.entities.concretes.User;
 public interface UserDal extends JpaRepository<User,Integer> {
 
 
+        User findByUsername(String username);
 
-		User findByUsername(String username);
+		boolean existsByUsername(String username);
 
 
 }
