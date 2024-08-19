@@ -1,18 +1,15 @@
 package com.haratres.SpringSecurity.business.concretes;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.haratres.SpringSecurity.business.abstracts.ProductService;
 import com.haratres.SpringSecurity.business.dtos.product.*;
 import com.haratres.SpringSecurity.business.rules.ProductBusinessRules;
+import com.haratres.SpringSecurity.business.utilities.BarcodeGenerator;
 import com.haratres.SpringSecurity.core.utilites.mapping.ModelMapperService;
-import com.haratres.SpringSecurity.entities.concretes.CustomUserDetail;
 import com.haratres.SpringSecurity.entities.concretes.Product;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.haratres.SpringSecurity.dataAccess.abstracts.ProductDal;
@@ -41,7 +38,9 @@ public class ProductManager implements ProductService {
 	@Override
 	public GetByIdProductResponse getById(GetByIdProductRequest getByIdProductRequest) {
 
-		productBusinessRules.productShouldBeExistWhenSelected(getByIdProductRequest.getProductId());
+		Optional<Product> productCheck = productDal.findById(getByIdProductRequest.getProductId());
+
+		productBusinessRules.productShouldBeExistWhenSelected(productCheck);
 
 		Product product = productDal.findById(getByIdProductRequest.getProductId()).get();
 		GetByIdProductResponse response = this.modelMapperService.forResponse().map(product, GetByIdProductResponse.class);
@@ -55,8 +54,12 @@ public class ProductManager implements ProductService {
 		productBusinessRules.productNameCanNotBeDuplicatedWhenInserted(createProductRequest.getProductName());
         productBusinessRules.categoryShouldBeExistWhenSelected(createProductRequest.getCategoryId());
 
+		createProductRequest.setProductCode(BarcodeGenerator.barcodeGenerator());
+
 		Product product = modelMapperService.forRequest().map(createProductRequest, Product.class);
+
 		product.setProductId(0); //categoryId parametresini productId olarak aldığı için 0 değeri atandı.
+
 		Product createdProduct = productDal.save(product);
 		CreatedProductResponse response = this.modelMapperService.forResponse().map(createdProduct, CreatedProductResponse.class);
 
@@ -66,9 +69,13 @@ public class ProductManager implements ProductService {
 	@Override
 	public UpdatedProductResponse update(UpdateProductRequest updateProductRequest) {
 
-		productBusinessRules.productShouldBeExistWhenSelected(updateProductRequest.getProductId());
+		Optional<Product> productCheck = productDal.findById(updateProductRequest.getProductId());
+
+		productBusinessRules.productShouldBeExistWhenSelected(productCheck);
 		productBusinessRules.productNameCanNotBeDuplicatedWhenUpdated(updateProductRequest.getProductName(), updateProductRequest.getProductId());
 		productBusinessRules.categoryShouldBeExistWhenSelected(updateProductRequest.getCategoryId());
+
+        updateProductRequest.setProductCode(productCheck.get().getProductCode());
 
 		Product product = modelMapperService.forRequest().map(updateProductRequest, Product.class);
 		Product updatedProduct = productDal.save(product);
@@ -80,8 +87,26 @@ public class ProductManager implements ProductService {
 	@Override
 	public void delete(DeleteProductRequest deleteProductRequest) {
 
-		productBusinessRules.productShouldBeExistWhenSelected(deleteProductRequest.getProductId());
+		Optional<Product> productCheck = productDal.findById(deleteProductRequest.getProductId());
+
+		productBusinessRules.productShouldBeExistWhenSelected(productCheck);
 
         productDal.deleteById(deleteProductRequest.getProductId());
 	}
+
+	@Override
+	public GetByNameOrCodeProductResponse getByNameOrCode(String word) {
+
+	   word = productBusinessRules.productNameToLowerCaseForSearch(word);
+
+		Product product = productDal.findByProductNameOrProductCode(word);
+
+		productBusinessRules.productShouldBeExistWhenSearch(product);
+
+        GetByNameOrCodeProductResponse response = this.modelMapperService.forResponse().map(product, GetByNameOrCodeProductResponse.class);
+
+		return response;
+	}
+
+
 }

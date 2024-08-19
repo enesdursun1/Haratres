@@ -2,7 +2,6 @@ package com.haratres.SpringSecurity.business.rules;
 
 import com.haratres.SpringSecurity.core.utilites.exceptions.types.BusinessException;
 import com.haratres.SpringSecurity.dataAccess.abstracts.ProductDal;
-import com.haratres.SpringSecurity.entities.concretes.Category;
 import com.haratres.SpringSecurity.entities.concretes.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,12 +33,28 @@ public class ProductBusinessRules {
             throw new BusinessException("Product name exists !");
         }
     }
-    public void productShouldBeExistWhenSelected(int productId)
+    public void productShouldBeExistWhenSelected(Optional<Product> product)
     {
-        Optional<Product> product = productDal.findById(productId);
 
         if (!product.isPresent())
             throw new BusinessException("Product not exists !");
+    }
+
+    public void productShouldBeExistWhenSearch(Product product)
+    {
+        if (product == null)
+            throw new BusinessException("Product not exists !");
+    }
+
+    //İngilizce karakterlerden dolayı büyük I'yı lower yaparken i olarak çeviriyor.Bunu düzeltmek için yapıldı.
+    public String productNameToLowerCaseForSearch(String productName)
+    {
+        for (int i = 0; i < productName.length() ; i++) {
+
+           if(productName.toCharArray()[i]=='I') productName.toCharArray()[i]='i';
+        }
+    return productName.toLowerCase();
+
     }
 
 }

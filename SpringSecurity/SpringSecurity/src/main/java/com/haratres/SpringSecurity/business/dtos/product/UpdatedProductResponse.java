@@ -13,6 +13,7 @@ public class UpdatedProductResponse {
     private int productId;
     private int categoryId;
     private String productName;
+    private String productCode;
     private BigDecimal price;
     private int stock;
     private String size;

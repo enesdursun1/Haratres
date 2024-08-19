@@ -9,5 +9,6 @@ public interface AddressDal extends JpaRepository<Address, Integer> {
 
     Address findByAddressNameAndUser_UserId(String addressName, int userId);
     List<Address> findAllByUser_UserId(int userId);
+    boolean existsAddressByUser_UserId(int userId);
 
 }

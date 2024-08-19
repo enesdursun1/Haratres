@@ -17,5 +17,6 @@ public interface ProductService {
 	CreatedProductResponse add(CreateProductRequest createProductRequest);
 	UpdatedProductResponse update(UpdateProductRequest updateProductRequest);
 	void delete(DeleteProductRequest deleteProductRequest);
+	GetByNameOrCodeProductResponse getByNameOrCode(String word);
 	
 }

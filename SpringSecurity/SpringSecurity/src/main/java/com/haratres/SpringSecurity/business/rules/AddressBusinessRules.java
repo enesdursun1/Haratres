@@ -55,6 +55,10 @@ public class AddressBusinessRules {
         if (!address.isPresent())
             throw new BusinessException("Address not exists !");
     }
+    public void checkAddressExistenceByUserId(int userId){
 
+        if (!addressDal.existsAddressByUser_UserId(userId))
+            throw new BusinessException("Address information not exists this user  !");
+    }
 
 }

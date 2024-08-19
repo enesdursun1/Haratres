@@ -35,7 +35,11 @@ public class AddressManager implements AddressService {
     @Override
     public List<GetListByUserIdAddressResponse> getListByUserId() {
 
-        List<Address> addresses = addressDal.findAllByUser_UserId(AuthHelper.getuserId());
+        int userId=AuthHelper.getuserId();
+
+        addressBusinessRules.checkAddressExistenceByUserId(userId);
+
+        List<Address> addresses = addressDal.findAllByUser_UserId(userId);
         List<GetListByUserIdAddressResponse> response = addresses.stream().map(address ->
                 this.modelMapperService.forResponse().map(address, GetListByUserIdAddressResponse.class)).toList();
 

@@ -1,15 +1,15 @@
 package com.haratres.SpringSecurity.business.dtos.product;
 
-import com.haratres.SpringSecurity.entities.concretes.Category;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetByIdProductResponse {
+public class GetByNameOrCodeProductResponse {
 
     private int productId;
     private int categoryId;
@@ -19,5 +19,4 @@ public class GetByIdProductResponse {
     private int stock;
     private String size;
     private String color;
-
 }

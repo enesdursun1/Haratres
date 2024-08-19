@@ -28,6 +28,8 @@ public class UpdateProductRequest {
     @NotBlank
     private String productName;
 
+    private String productCode;
+
     @NotNull
     @Min(value = 1)
     @Positive
