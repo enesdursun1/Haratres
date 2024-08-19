@@ -3,14 +3,7 @@ package com.haratres.SpringSecurity.entities.concretes;
 
 import java.math.BigDecimal;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,7 +12,10 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="products")
+@Table(name = "products", indexes = {
+		@Index(name = "idx_product_name", columnList = "productName"),
+		@Index(name = "idx_product_code", columnList = "productCode")
+})
 public class Product {
 
 	@Id

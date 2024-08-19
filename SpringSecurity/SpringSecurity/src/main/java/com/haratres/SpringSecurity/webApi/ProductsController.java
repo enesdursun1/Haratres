@@ -55,9 +55,9 @@ public class ProductsController {
 
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
-    public GetByNameOrCodeProductResponse search(@RequestParam String word) {
+    public GetByNameOrCodeProductResponse search(@RequestParam String keyword) {
 
-      return  productService.getByNameOrCode(word);
+      return  productService.getByNameOrCode(keyword);
 
     }
 
