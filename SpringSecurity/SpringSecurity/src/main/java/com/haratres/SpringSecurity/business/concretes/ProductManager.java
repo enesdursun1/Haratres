@@ -7,9 +7,11 @@ import com.haratres.SpringSecurity.business.abstracts.ProductService;
 import com.haratres.SpringSecurity.business.dtos.product.*;
 import com.haratres.SpringSecurity.business.rules.ProductBusinessRules;
 import com.haratres.SpringSecurity.business.utilities.BarcodeGenerator;
+import com.haratres.SpringSecurity.core.business.pagging.PageInfo;
 import com.haratres.SpringSecurity.core.utilites.mapping.ModelMapperService;
 import com.haratres.SpringSecurity.entities.concretes.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.haratres.SpringSecurity.dataAccess.abstracts.ProductDal;
@@ -108,6 +110,23 @@ public class ProductManager implements ProductService {
 		productBusinessRules.productShouldBeExistWhenSearch(product);
 
         GetByNameOrCodeProductResponse response = this.modelMapperService.forResponse().map(product, GetByNameOrCodeProductResponse.class);
+
+		return response;
+	}
+
+	@Override
+	public List<GetListBySortProductResponse> getListBySort(String field, String sortDirection) {
+
+		productBusinessRules.validateSortField(field);
+		productBusinessRules.validateSortDirection(sortDirection);
+
+		Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), field);
+
+		List<Product> products = productDal.findAll(sort);
+
+		List<GetListBySortProductResponse> response = products.stream().map(product ->
+				this.modelMapperService.forResponse().map(product, GetListBySortProductResponse.class)).toList();
+
 
 		return response;
 	}

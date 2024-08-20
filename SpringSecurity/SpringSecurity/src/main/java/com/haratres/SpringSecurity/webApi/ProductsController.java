@@ -61,5 +61,13 @@ public class ProductsController {
 
     }
 
+    @GetMapping("/getListBySort")
+    @ResponseStatus(HttpStatus.OK)
+    public List<GetListBySortProductResponse> getListBySort(@RequestParam String field, @RequestParam String sortDirection) {
+
+        return  productService.getListBySort(field,sortDirection);
+
+    }
+
 
 }

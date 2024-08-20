@@ -7,6 +7,10 @@ import com.haratres.SpringSecurity.entities.concretes.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -62,5 +66,32 @@ public class ProductBusinessRules {
 
 
     }
+    public void validateSortDirection(String sortDirection) {
 
+        String normalizedDirection = sortDirection.trim().toLowerCase();
+
+        if (!normalizedDirection.equals("asc") && !normalizedDirection.equals("desc")) {
+
+            throw new BusinessException("Invalid sort direction type! Please choose one of these directions: ASC, DESC");
+        }
+    }
+
+    public void validateSortField(String field) {
+
+        List<String> validFields = new ArrayList<>();
+        Field[] fields=  Product.class.getDeclaredFields();
+
+        for (Field f : fields) {
+
+            if (!f.getName().equals("category")) {
+                validFields.add(f.getName());
+            }
+
+        }
+        validFields.add("categoryId");
+
+        if (!validFields.contains(field)) {
+            throw new BusinessException("Invalid sort field ! Please choose one of the following fields : "+ String.join(", ", validFields));
+        }
+    }
 }
