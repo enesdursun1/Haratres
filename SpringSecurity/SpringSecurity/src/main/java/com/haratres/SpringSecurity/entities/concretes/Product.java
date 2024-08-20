@@ -29,21 +29,25 @@ public class Product {
 	@Column(name="productCode")
 	private String productCode;
 	
-	@Column(name="price")
-	private BigDecimal price;
-	
-	@Column(name="stock")
-	private int stock;
+	/*@Column(name="stock")
+	private int stock;*/
 	
 	@Column(name="size")
 	private String size;
 	
 	@Column(name="color")
 	private String color;
-	
+
 	
 	@ManyToOne()
 	@JoinColumn(name="categoryId")
 	private Category category;
-	
+
+	@OneToOne(mappedBy = "product", cascade = CascadeType.ALL)
+	private Price price;
+
+	@OneToOne(mappedBy = "product", cascade = CascadeType.ALL)
+	private Stock stock;
+
+
 }

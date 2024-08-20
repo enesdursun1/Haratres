@@ -1,6 +1,5 @@
-package com.haratres.SpringSecurity.business.dtos.product;
+package com.haratres.SpringSecurity.business.dtos.price;
 
-import com.haratres.SpringSecurity.entities.concretes.Price;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -11,20 +10,15 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class CreateProductRequest {
+@AllArgsConstructor
+public class UpdatePriceRequest {
 
     @NotNull
-    @Min(value = 1)
     @Positive
-    private int categoryId;
+    @Min(value=1)
+    private int priceId;
 
-    @NotNull
-    @NotBlank
-    private String productName;
-
-    private String productCode;
 
     @NotNull
     @Min(value = 1)
@@ -32,14 +26,12 @@ public class CreateProductRequest {
     private BigDecimal price;
 
     @NotNull
+    @NotBlank
+    private String currency;
+
+    @NotNull
+    @Min(value = 1)
     @Positive
-    private int stock;
+    private int productId;
 
-    @NotNull
-    @NotBlank
-    private String size;
-
-    @NotNull
-    @NotBlank
-    private String color;
 }

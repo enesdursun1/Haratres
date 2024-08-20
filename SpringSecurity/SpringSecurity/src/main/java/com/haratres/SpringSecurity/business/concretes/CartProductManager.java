@@ -145,7 +145,7 @@ public class CartProductManager implements CartProductService {
     private void setPrice(int productId,CartProduct cartProduct){
 
         GetByIdProductRequest getByIdProductRequest = new GetByIdProductRequest(productId);
-        cartProduct.getProduct().setPrice(productService.getById(getByIdProductRequest).getPrice());
+        cartProduct.getProduct().getPrice().setPrice(productService.getById(getByIdProductRequest).getPrice().getPrice());
         cartProduct.setTotalPrice();
 
     }
