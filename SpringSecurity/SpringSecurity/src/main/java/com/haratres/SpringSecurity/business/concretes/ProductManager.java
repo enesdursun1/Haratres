@@ -54,7 +54,11 @@ public class ProductManager implements ProductService {
 		productBusinessRules.productNameCanNotBeDuplicatedWhenInserted(createProductRequest.getProductName());
         productBusinessRules.categoryShouldBeExistWhenSelected(createProductRequest.getCategoryId());
 
-		createProductRequest.setProductCode(BarcodeGenerator.barcodeGenerator());
+		String productCode = BarcodeGenerator.barcodeGenerator();
+
+		productCode = productBusinessRules.productCodeCanNotBeDuplicatedWhenInserted(productCode);
+
+		createProductRequest.setProductCode(productCode);
 
 		Product product = modelMapperService.forRequest().map(createProductRequest, Product.class);
 
@@ -95,11 +99,11 @@ public class ProductManager implements ProductService {
 	}
 
 	@Override
-	public GetByNameOrCodeProductResponse getByNameOrCode(String word) {
+	public GetByNameOrCodeProductResponse getByNameOrCode(String keyword) {
 
-	   word = productBusinessRules.productNameToLowerCaseForSearch(word);
+		keyword = keyword.toLowerCase();
 
-		Product product = productDal.findByProductNameOrProductCode(word);
+		Product product = productDal.findByProductNameOrProductCode(keyword);
 
 		productBusinessRules.productShouldBeExistWhenSearch(product);
 

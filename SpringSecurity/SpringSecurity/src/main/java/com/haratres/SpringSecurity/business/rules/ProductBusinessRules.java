@@ -1,5 +1,6 @@
 package com.haratres.SpringSecurity.business.rules;
 
+import com.haratres.SpringSecurity.business.utilities.BarcodeGenerator;
 import com.haratres.SpringSecurity.core.utilites.exceptions.types.BusinessException;
 import com.haratres.SpringSecurity.dataAccess.abstracts.ProductDal;
 import com.haratres.SpringSecurity.entities.concretes.Product;
@@ -46,14 +47,19 @@ public class ProductBusinessRules {
             throw new BusinessException("Product not exists !");
     }
 
-    //İngilizce karakterlerden dolayı büyük I'yı lower yaparken i olarak çeviriyor.Bunu düzeltmek için yapıldı.
-    public String productNameToLowerCaseForSearch(String productName)
-    {
-        for (int i = 0; i < productName.length() ; i++) {
+    public String productCodeCanNotBeDuplicatedWhenInserted(String productCode){
 
-           if(productName.toCharArray()[i]=='I') productName.toCharArray()[i]='i';
+        boolean productCodeExists= productDal.existsByProductCode(productCode);
+
+        if(productCodeExists){
+
+            productCode = BarcodeGenerator.barcodeGenerator();
+          return  productCodeCanNotBeDuplicatedWhenInserted(productCode);
+
+
         }
-    return productName.toLowerCase();
+        else return  productCode;
+
 
     }
 

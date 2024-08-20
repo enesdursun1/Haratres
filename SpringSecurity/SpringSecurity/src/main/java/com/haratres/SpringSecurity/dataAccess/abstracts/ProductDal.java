@@ -12,4 +12,5 @@ public interface ProductDal extends JpaRepository<Product, Integer>{
     Product findByProductName(String productName);
     @Query("SELECT p FROM Product p WHERE LOWER(p.productName) = (:word) OR LOWER(p.productCode) = (:word)")
     Product findByProductNameOrProductCode(@Param("word") String keyword);
+    boolean existsByProductCode(String productCode);
 }
