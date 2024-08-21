@@ -9,14 +9,12 @@ import com.haratres.SpringSecurity.business.dtos.product.*;
 import com.haratres.SpringSecurity.business.rules.ProductBusinessRules;
 import com.haratres.SpringSecurity.business.utilities.BarcodeGenerator;
 import com.haratres.SpringSecurity.core.business.pagging.PageInfo;
+import com.haratres.SpringSecurity.core.business.pagging.PaginateResponse;
 import com.haratres.SpringSecurity.core.utilites.mapping.ModelMapperService;
 import com.haratres.SpringSecurity.entities.concretes.Price;
 import com.haratres.SpringSecurity.entities.concretes.Product;
 import com.haratres.SpringSecurity.entities.concretes.Stock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -34,14 +32,17 @@ public class ProductManager implements ProductService {
 
 
 	@Override
-	public List<GetAllProductResponse> getAll(PageInfo pageInfo) {
+	public PaginateResponse<GetAllProductResponse> getAll(PageInfo pageInfo) {
 
-		List<Product> products = productBusinessRules.processPagination(pageInfo);
+		List<Product> products = productBusinessRules.paginationProcess(pageInfo);
 
 		List<GetAllProductResponse> response = products.stream().map(
 				product -> this.modelMapperService.forResponse().map(product, GetAllProductResponse.class)).toList();
 
-		return response;
+		PaginateResponse<GetAllProductResponse> paginateResponse =
+				new PaginateResponse(pageInfo.getPageIndex(), pageInfo.getPageSize(),productDal.count() ,response);
+
+		return paginateResponse;
 	}
 
 	@Override
@@ -164,5 +165,6 @@ public class ProductManager implements ProductService {
 		newProduct.getStock().setProduct(newProduct);
 
 	}
+
 
 }

@@ -102,12 +102,13 @@ public class ProductBusinessRules {
         if (field.equals("stock")) return "stock.stockQuantity";
         return field;
     }
-    public List<Product> processPagination(PageInfo pageInfo){
+    public List<Product> paginationProcess(PageInfo pageInfo){
 
         if (pageInfo != null){
 
             PageRequest pageRequest = PageRequest.of(pageInfo.getPageIndex(), pageInfo.getPageSize());
             return productDal.findAll(pageRequest).getContent();
+
         }
         else  return productDal.findAll();
     }
