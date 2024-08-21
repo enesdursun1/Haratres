@@ -6,7 +6,10 @@ import java.util.stream.Collectors;
 
 import com.haratres.SpringSecurity.business.abstracts.CategoryService;
 import com.haratres.SpringSecurity.business.dtos.category.*;
+import com.haratres.SpringSecurity.business.dtos.product.GetAllProductResponse;
 import com.haratres.SpringSecurity.business.rules.CategoryBusinessRules;
+import com.haratres.SpringSecurity.core.business.pagging.PageInfo;
+import com.haratres.SpringSecurity.core.business.pagging.PaginateResponse;
 import com.haratres.SpringSecurity.core.utilites.mapping.ModelMapperService;
 import com.haratres.SpringSecurity.entities.concretes.Category;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,14 +32,17 @@ public class CategoryManager implements CategoryService {
 
 
 	@Override
-	public List<GetAllCategoryResponse> getAll() {
+	public PaginateResponse<GetAllCategoryResponse> getAll(PageInfo pageInfo) {
 
-		List<Category> categories = categoryDal.findAll();
+		List<Category> categories = categoryBusinessRules.paginationProcess(pageInfo);
 
 		List<GetAllCategoryResponse> response = categories.stream().map(
 				category -> this.modelMapperService.forResponse().map(category, GetAllCategoryResponse.class)).toList();
 
-		return response;
+		PaginateResponse<GetAllCategoryResponse> paginateResponse =
+				new PaginateResponse(pageInfo.getPageIndex(), pageInfo.getPageSize(), categoryDal.count() ,response);
+
+		return paginateResponse;
 	}
 
 	@Override

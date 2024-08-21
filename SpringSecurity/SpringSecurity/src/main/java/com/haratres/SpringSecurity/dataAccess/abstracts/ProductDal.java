@@ -14,4 +14,5 @@ public interface ProductDal extends JpaRepository<Product, Integer>{
     Product findByProductNameOrProductCode(@Param("word") String keyword);
     boolean existsByProductCode(String productCode);
 
+
 }

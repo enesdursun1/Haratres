@@ -2,6 +2,8 @@ package com.haratres.SpringSecurity.webApi;
 
 import com.haratres.SpringSecurity.business.abstracts.CategoryService;
 import com.haratres.SpringSecurity.business.dtos.category.*;
+import com.haratres.SpringSecurity.core.business.pagging.PageInfo;
+import com.haratres.SpringSecurity.core.business.pagging.PaginateResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,9 +21,9 @@ public class CategoriesController {
 
     @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.OK)
-    public List<GetAllCategoryResponse> getAll() {
+    public PaginateResponse<GetAllCategoryResponse> getAll(@RequestBody(required = false) PageInfo pageInfo) {
 
-        return categoryService.getAll();
+        return categoryService.getAll(pageInfo);
 
     }
     @GetMapping("/getById")
