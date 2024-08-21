@@ -1,5 +1,6 @@
 package com.haratres.SpringSecurity.business.concretes;
 
+
 import java.util.List;
 import java.util.Optional;
 
@@ -9,8 +10,13 @@ import com.haratres.SpringSecurity.business.rules.ProductBusinessRules;
 import com.haratres.SpringSecurity.business.utilities.BarcodeGenerator;
 import com.haratres.SpringSecurity.core.business.pagging.PageInfo;
 import com.haratres.SpringSecurity.core.utilites.mapping.ModelMapperService;
+import com.haratres.SpringSecurity.entities.concretes.Price;
 import com.haratres.SpringSecurity.entities.concretes.Product;
+import com.haratres.SpringSecurity.entities.concretes.Stock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -28,9 +34,10 @@ public class ProductManager implements ProductService {
 
 
 	@Override
-	public List<GetAllProductResponse> getAll() {
+	public List<GetAllProductResponse> getAll(PageInfo pageInfo) {
 
-		List<Product> products = productDal.findAll();
+		List<Product> products = productBusinessRules.processPagination(pageInfo);
+
 		List<GetAllProductResponse> response = products.stream().map(
 				product -> this.modelMapperService.forResponse().map(product, GetAllProductResponse.class)).toList();
 
@@ -66,6 +73,9 @@ public class ProductManager implements ProductService {
 
 		product.setProductId(0); //categoryId parametresini productId olarak aldığı için 0 değeri atandı.
 
+		product.setPrice(new Price(createProductRequest.getPrice(),"TL",product));
+		product.setStock(new Stock(createProductRequest.getStock(),product));
+
 		Product createdProduct = productDal.save(product);
 		CreatedProductResponse response = this.modelMapperService.forResponse().map(createdProduct, CreatedProductResponse.class);
 
@@ -84,6 +94,11 @@ public class ProductManager implements ProductService {
         updateProductRequest.setProductCode(productCheck.get().getProductCode());
 
 		Product product = modelMapperService.forRequest().map(updateProductRequest, Product.class);
+
+		updatePrice(productCheck.get(), product);
+		updateStock(productCheck.get(),product,updateProductRequest.getStock());
+
+
 		Product updatedProduct = productDal.save(product);
 		UpdatedProductResponse response = this.modelMapperService.forResponse().map(updatedProduct, UpdatedProductResponse.class);
 		return response;
@@ -117,8 +132,12 @@ public class ProductManager implements ProductService {
 	@Override
 	public List<GetListBySortProductResponse> getListBySort(String field, String sortDirection) {
 
+
+
 		productBusinessRules.validateSortField(field);
 		productBusinessRules.validateSortDirection(sortDirection);
+
+	    field = productBusinessRules.mapFieldToDatabaseColumn(field);
 
 		Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), field);
 
@@ -131,5 +150,19 @@ public class ProductManager implements ProductService {
 		return response;
 	}
 
+	private void updatePrice(Product oldProduct, Product newProduct) {
+
+		newProduct.getPrice().setPriceId(oldProduct.getPrice().getPriceId());
+		newProduct.getPrice().setCurrency(oldProduct.getPrice().getCurrency());
+		newProduct.getPrice().setProduct(newProduct);
+	}
+
+	private void updateStock(Product oldProduct, Product newProduct,int newStock) {
+
+		newProduct.getStock().setStockId(oldProduct.getStock().getStockId());
+		newProduct.getStock().setStockQuantity(newStock);
+		newProduct.getStock().setProduct(newProduct);
+
+	}
 
 }

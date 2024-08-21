@@ -1,5 +1,6 @@
 package com.haratres.SpringSecurity.business.dtos.product;
 
+import com.haratres.SpringSecurity.entities.concretes.Price;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
