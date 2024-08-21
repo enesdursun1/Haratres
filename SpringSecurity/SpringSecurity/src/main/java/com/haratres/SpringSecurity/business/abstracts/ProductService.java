@@ -13,7 +13,7 @@ import com.haratres.SpringSecurity.entities.concretes.Product;
 
 public interface ProductService {
 
-	List<GetAllProductResponse> getAll();
+	List<GetAllProductResponse> getAll(PageInfo pageInfo);
 	GetByIdProductResponse getById(GetByIdProductRequest getByIdProductRequest);
 	CreatedProductResponse add(CreateProductRequest createProductRequest);
 	UpdatedProductResponse update(UpdateProductRequest updateProductRequest);

@@ -1,5 +1,6 @@
 package com.haratres.SpringSecurity.business.concretes;
 
+
 import java.util.List;
 import java.util.Optional;
 
@@ -33,12 +34,10 @@ public class ProductManager implements ProductService {
 
 
 	@Override
-	public List<GetAllProductResponse> getAll() {
+	public List<GetAllProductResponse> getAll(PageInfo pageInfo) {
 
-		//PageRequest pageRequest = PageRequest.of(pageInfo.getPageIndex(), pageInfo.getPageSize());
-		//products = productDal.findAll(pageRequest).getContent();
+		List<Product> products = productBusinessRules.processPagination(pageInfo);
 
-		List<Product> products = productDal.findAll();
 		List<GetAllProductResponse> response = products.stream().map(
 				product -> this.modelMapperService.forResponse().map(product, GetAllProductResponse.class)).toList();
 
@@ -96,14 +95,9 @@ public class ProductManager implements ProductService {
 
 		Product product = modelMapperService.forRequest().map(updateProductRequest, Product.class);
 
-		product.getPrice().setPriceId(productCheck.get().getPrice().getPriceId());
-		product.getPrice().setPrice(updateProductRequest.getPrice());
-		product.getPrice().setCurrency(productCheck.get().getPrice().getCurrency());
-		product.getPrice().setProduct(product);
+		updatePrice(productCheck.get(), product);
+		updateStock(productCheck.get(),product,updateProductRequest.getStock());
 
-		product.getStock().setStockId(productCheck.get().getStock().getStockId());
-		product.getStock().setStockQuantity(updateProductRequest.getStock());
-		product.getStock().setProduct(product);
 
 		Product updatedProduct = productDal.save(product);
 		UpdatedProductResponse response = this.modelMapperService.forResponse().map(updatedProduct, UpdatedProductResponse.class);
@@ -143,8 +137,7 @@ public class ProductManager implements ProductService {
 		productBusinessRules.validateSortField(field);
 		productBusinessRules.validateSortDirection(sortDirection);
 
-		if (field.equals("price")) field = "price.price";
-		if (field.equals("stock")) field = "stock.stockQuantity";
+	    field = productBusinessRules.mapFieldToDatabaseColumn(field);
 
 		Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), field);
 
@@ -157,5 +150,19 @@ public class ProductManager implements ProductService {
 		return response;
 	}
 
+	private void updatePrice(Product oldProduct, Product newProduct) {
+
+		newProduct.getPrice().setPriceId(oldProduct.getPrice().getPriceId());
+		newProduct.getPrice().setCurrency(oldProduct.getPrice().getCurrency());
+		newProduct.getPrice().setProduct(newProduct);
+	}
+
+	private void updateStock(Product oldProduct, Product newProduct,int newStock) {
+
+		newProduct.getStock().setStockId(oldProduct.getStock().getStockId());
+		newProduct.getStock().setStockQuantity(newStock);
+		newProduct.getStock().setProduct(newProduct);
+
+	}
 
 }

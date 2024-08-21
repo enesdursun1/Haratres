@@ -1,10 +1,12 @@
 package com.haratres.SpringSecurity.business.rules;
 
 import com.haratres.SpringSecurity.business.utilities.BarcodeGenerator;
+import com.haratres.SpringSecurity.core.business.pagging.PageInfo;
 import com.haratres.SpringSecurity.core.utilites.exceptions.types.BusinessException;
 import com.haratres.SpringSecurity.dataAccess.abstracts.ProductDal;
 import com.haratres.SpringSecurity.entities.concretes.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
@@ -94,4 +96,20 @@ public class ProductBusinessRules {
             throw new BusinessException("Invalid sort field ! Please choose one of the following fields : "+ String.join(", ", validFields));
         }
     }
+
+    public String mapFieldToDatabaseColumn(String field) {
+        if (field.equals("price")) return "price.price";
+        if (field.equals("stock")) return "stock.stockQuantity";
+        return field;
+    }
+    public List<Product> processPagination(PageInfo pageInfo){
+
+        if (pageInfo != null){
+
+            PageRequest pageRequest = PageRequest.of(pageInfo.getPageIndex(), pageInfo.getPageSize());
+            return productDal.findAll(pageRequest).getContent();
+        }
+        else  return productDal.findAll();
+    }
+
 }

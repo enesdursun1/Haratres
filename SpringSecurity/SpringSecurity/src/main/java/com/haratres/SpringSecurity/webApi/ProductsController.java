@@ -2,6 +2,7 @@ package com.haratres.SpringSecurity.webApi;
 
 import com.haratres.SpringSecurity.business.abstracts.ProductService;
 import com.haratres.SpringSecurity.business.dtos.product.*;
+import com.haratres.SpringSecurity.core.business.pagging.PageInfo;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,9 +19,9 @@ public class ProductsController {
 
     @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.OK)
-    public List<GetAllProductResponse> getAll() {
+    public List<GetAllProductResponse> getAll(@RequestBody(required = false) PageInfo pageInfo) {
 
-        return productService.getAll();
+        return productService.getAll(pageInfo);
 
     }
     @GetMapping("/getById")

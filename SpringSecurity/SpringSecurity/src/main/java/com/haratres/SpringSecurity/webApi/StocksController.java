@@ -1,8 +1,6 @@
 package com.haratres.SpringSecurity.webApi;
 
-import com.haratres.SpringSecurity.business.abstracts.PriceService;
 import com.haratres.SpringSecurity.business.abstracts.StockService;
-import com.haratres.SpringSecurity.business.dtos.price.*;
 import com.haratres.SpringSecurity.business.dtos.stock.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

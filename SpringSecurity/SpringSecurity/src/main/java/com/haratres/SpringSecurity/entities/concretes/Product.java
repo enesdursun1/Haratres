@@ -29,9 +29,6 @@ public class Product {
 	@Column(name="productCode")
 	private String productCode;
 	
-	/*@Column(name="stock")
-	private int stock;*/
-	
 	@Column(name="size")
 	private String size;
 	
