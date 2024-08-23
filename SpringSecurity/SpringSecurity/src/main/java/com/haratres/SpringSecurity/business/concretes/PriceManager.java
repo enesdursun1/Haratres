@@ -49,7 +49,9 @@ public class PriceManager implements PriceService {
     public CreatedPriceResponse add(CreatePriceRequest createPriceRequest) {
 
         Price price = this.modelMapperService.forRequest().map(createPriceRequest, Price.class);
+
         Price createdPrice = priceDal.save(price);
+
         CreatedPriceResponse response = this.modelMapperService.forResponse().map(createdPrice, CreatedPriceResponse.class);
 
         return response;
@@ -61,7 +63,9 @@ public class PriceManager implements PriceService {
         priceBusinessRules.priceShouldBeExistWhenSelected(priceDal.findById(updatePriceRequest.getPriceId()));
 
         Price price = this.modelMapperService.forRequest().map(updatePriceRequest, Price.class);
+
         Price updatedPrice = priceDal.save(price);
+
         UpdatedPriceResponse response = this.modelMapperService.forResponse().map(updatedPrice, UpdatedPriceResponse.class);
 
         return response;

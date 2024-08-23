@@ -11,5 +11,7 @@ import com.haratres.SpringSecurity.entities.concretes.User;
 public interface UserService {
 
 	User getByUsername(String username);
+	User getById(int userId);
 	RegisteredUserResponse register(RegisterUserRequest userRegisterRequest);
+
 }

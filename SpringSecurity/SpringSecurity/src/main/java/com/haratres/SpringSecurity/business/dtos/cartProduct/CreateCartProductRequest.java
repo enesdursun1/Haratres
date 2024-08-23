@@ -20,8 +20,6 @@ public class CreateCartProductRequest {
     private int productId;
 
 
-    private  int userId;
-
     @NotNull
     @Min(value = 1)
     @Positive

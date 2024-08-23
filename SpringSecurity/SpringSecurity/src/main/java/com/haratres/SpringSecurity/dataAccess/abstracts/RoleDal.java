@@ -8,5 +8,5 @@ import com.haratres.SpringSecurity.entities.concretes.Role;
 @Repository
 public interface RoleDal extends JpaRepository<Role, Integer> {
 
-	
+	Role findByRoleName(String name);
 }

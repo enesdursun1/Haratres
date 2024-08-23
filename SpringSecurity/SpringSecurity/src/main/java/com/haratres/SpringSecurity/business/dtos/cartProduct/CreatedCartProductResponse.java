@@ -15,7 +15,7 @@ public class CreatedCartProductResponse implements CartProductResponse {
 
     private int productId;
 
-    private  int userId;
+   // private  int cartId;
 
     private  int quantity;
 

@@ -13,8 +13,9 @@ import java.util.List;
 @RequestMapping("/api/cartProducts")
 public class CartProductsController {
 
-    @Autowired
+   @Autowired
     private CartProductService cartProductService;
+
 
     @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.OK)
@@ -31,19 +32,11 @@ public class CartProductsController {
         return cartProductService.getById(getByIdCartProductRequest);
 
     }
-
-    @GetMapping("/getListByUserId")
-    @ResponseStatus(HttpStatus.OK)
-    public GetByUserIdCartProductWithTotalPriceResponse getListByUserId(@RequestBody @Valid GetByUserIdCartProductRequest getByUserIdCartProductRequest) {
-
-        return cartProductService.getListByUserId(getByUserIdCartProductRequest);
-
-    }
-
     @PostMapping("/add")
     public CartProductResponse add(@RequestBody @Valid CreateCartProductRequest createCartProductRequest) {
 
         return  cartProductService.addOrUpdateCartProduct(createCartProductRequest);
+
     }
     @PutMapping ("/update")
     @ResponseStatus(HttpStatus.OK)
@@ -61,12 +54,6 @@ public class CartProductsController {
 
     }
 
-    @DeleteMapping("/deleteByUserId")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteByUserId() {
 
-        cartProductService.deleteByUserId();
-
-    }
 
 }

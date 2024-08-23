@@ -21,10 +21,8 @@ public class PaginateResponse<T> {
     public PaginateResponse(int pageIndex, int pageSize,long TCount,List<T> items) {
 
         this.items = items;
-
-        int totalPages = (int) Math.ceil((double) TCount / pageSize);
-        this.pageCount = totalPages;
-        this.hasNext = pageIndex < totalPages - 1;
+        this.pageCount =  (int) Math.ceil((double) TCount / pageSize);
+        this.hasNext = pageIndex < pageCount - 1;
         this.hasPrevious = pageIndex > 0;
     }
 

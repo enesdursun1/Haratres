@@ -9,16 +9,13 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetByUserIdCartProductResponse {
+public class GetListByCartIdCartProductResponse {
 
     private int cartProductId;
 
     private int productId;
 
-    private  int userId;
-
     private  int quantity;
 
     private BigDecimal totalPrice;
-
 }

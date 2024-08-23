@@ -11,9 +11,8 @@ public interface CartProductService {
     CreatedCartProductResponse add(CreateCartProductRequest createCartProductRequest);
     UpdatedCartProductResponse update(UpdateCartProductRequest updateCartProductRequest);
     void delete(DeleteCartProductRequest deleteCartProductRequest);
-
     CartProductResponse addOrUpdateCartProduct(CreateCartProductRequest createCartProductRequest);
+    List<GetListByCartIdCartProductResponse> getListByCartId(int cartId);
+    void deleteByCartId(int cartId);
 
-    GetByUserIdCartProductWithTotalPriceResponse getListByUserId(GetByUserIdCartProductRequest getByUserIdCartProductRequest);
-    void deleteByUserId();
 }

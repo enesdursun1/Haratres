@@ -14,8 +14,6 @@ public class UpdatedCartProductResponse implements CartProductResponse {
 
     private int productId;
 
-    private  int userId;
-
     private  int quantity;
 
     private BigDecimal totalPrice;

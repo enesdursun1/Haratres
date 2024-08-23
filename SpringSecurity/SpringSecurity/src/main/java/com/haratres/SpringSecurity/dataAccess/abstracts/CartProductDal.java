@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface CartProductDal extends JpaRepository<CartProduct, Integer> {
 
-    List<CartProduct> findByUser_UserId(int userId);
-    void deleteByUser_UserId(int userId);
-    CartProduct findByProduct_ProductIdAndUser_UserId(int cartProductId, int userId);
-    boolean existsByProduct_ProductIdAndUser_UserId(int productId, int userId);
-    boolean existsByUser_UserId(int userId);
+    boolean existsByProduct_ProductIdAndCart_CartId(int productId, int cartId);
+    CartProduct findByProduct_ProductIdAndCart_CartId(int productId, int cartId);
+    List<CartProduct> findByCart_CartId(int cartId);
+    void deleteByCart_CartId(int cartId);
+
 }

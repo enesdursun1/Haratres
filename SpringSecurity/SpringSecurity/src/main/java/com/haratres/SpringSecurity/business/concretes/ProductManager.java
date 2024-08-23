@@ -39,10 +39,11 @@ public class ProductManager implements ProductService {
 		List<GetAllProductResponse> response = products.stream().map(
 				product -> this.modelMapperService.forResponse().map(product, GetAllProductResponse.class)).toList();
 
-		PaginateResponse<GetAllProductResponse> paginateResponse =
-				new PaginateResponse(pageInfo.getPageIndex(), pageInfo.getPageSize(),productDal.count() ,response);
+			PaginateResponse<GetAllProductResponse> paginateResponse =
+					new PaginateResponse(pageInfo.getPageIndex(), pageInfo.getPageSize(),productDal.count() ,response);
+			return paginateResponse;
 
-		return paginateResponse;
+
 	}
 
 	@Override
@@ -132,8 +133,6 @@ public class ProductManager implements ProductService {
 
 	@Override
 	public List<GetListBySortProductResponse> getListBySort(String field, String sortDirection) {
-
-
 
 		productBusinessRules.validateSortField(field);
 		productBusinessRules.validateSortDirection(sortDirection);

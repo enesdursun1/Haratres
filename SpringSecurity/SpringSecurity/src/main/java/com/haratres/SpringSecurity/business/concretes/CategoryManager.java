@@ -1,12 +1,10 @@
 package com.haratres.SpringSecurity.business.concretes;
 
-import java.util.ArrayList;
+
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.haratres.SpringSecurity.business.abstracts.CategoryService;
 import com.haratres.SpringSecurity.business.dtos.category.*;
-import com.haratres.SpringSecurity.business.dtos.product.GetAllProductResponse;
 import com.haratres.SpringSecurity.business.rules.CategoryBusinessRules;
 import com.haratres.SpringSecurity.core.business.pagging.PageInfo;
 import com.haratres.SpringSecurity.core.business.pagging.PaginateResponse;

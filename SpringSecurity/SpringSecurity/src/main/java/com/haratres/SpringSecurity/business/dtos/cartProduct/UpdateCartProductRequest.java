@@ -24,7 +24,6 @@ public class UpdateCartProductRequest {
     @Positive
     private int productId;
 
-    private  int userId;
 
     @NotNull
     @Min(value = 1)

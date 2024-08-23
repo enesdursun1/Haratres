@@ -1,5 +1,6 @@
 package com.haratres.SpringSecurity.configuration;
 
+import com.haratres.SpringSecurity.core.security.jwt.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,34 +11,38 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity
 @Configuration
 public class SecurityConfiguration {
 
+
+   @Autowired
+   private JwtFilter jwtFilter;
    @Autowired
    UserDetailsService userDetailsService;
    @Autowired
 	private PasswordEncoder passwordEncoder;
+
    @Bean
    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
        http
+          .csrf(csrf -> csrf.disable())
            .authorizeHttpRequests(authorize -> authorize
-               .requestMatchers("/login","/register/**", "/test/**", "/resources/**").permitAll()
+               .requestMatchers("/login","/register", "/resources/**").permitAll()
+               .requestMatchers("/api/products/**","/api/categories/**","/api/prices/**",
+                       "/api/stocks/**","/api/cartProducts/getAll","/api/cartProducts/getById").hasRole("ADMIN")
                .anyRequest().authenticated() 
            )
-           .formLogin(form -> form
-                   
-                   .permitAll() 
-               )
-               .logout(logout -> logout
-                   .permitAll() 
-               )
-               .httpBasic(Customizer.withDefaults())
-               .csrf(csrf -> csrf.disable());
+               .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+               .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+
        return http.build();
    }
 

@@ -17,15 +17,16 @@ public class CartProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cartProductId")
-    int cartProductId;
+    private int cartProductId;
 
     @ManyToOne
     @JoinColumn(name = "productId")
     private Product product;
 
-    @ManyToOne
-    @JoinColumn(name="userId")
-    private User user;
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "cartId")
+    private Cart cart;
+
 
     @Column(name = "quantity")
     private int quantity;

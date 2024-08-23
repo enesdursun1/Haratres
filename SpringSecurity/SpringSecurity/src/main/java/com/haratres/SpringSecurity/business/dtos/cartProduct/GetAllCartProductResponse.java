@@ -15,7 +15,7 @@ public class GetAllCartProductResponse {
 
     private int productId;
 
-    private  int userId;
+    private  int cartId;
 
     private  int quantity;
 

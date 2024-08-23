@@ -1,5 +1,6 @@
 package com.haratres.SpringSecurity.entities.concretes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -14,14 +15,7 @@ import lombok.NoArgsConstructor;
 @Table(name="users")
 public class User {
 	
-	
-	public User(String username,String password) {
-		
-		setUsername(username);
-		setPassword(password);
-		
-	}
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="userId")
@@ -41,7 +35,16 @@ public class User {
 	})
 	private List<Role> roles;
 
-	@OneToMany(mappedBy = "user")
-	private List<CartProduct> cartProducts;
-	
+	@OneToOne(mappedBy = "user")
+	private Cart cart;
+
+
+	public User(String username,String password, List<Role> roles) {
+
+		setUsername(username);
+		setPassword(password);
+		this.roles = roles;
+
+	}
+
 }

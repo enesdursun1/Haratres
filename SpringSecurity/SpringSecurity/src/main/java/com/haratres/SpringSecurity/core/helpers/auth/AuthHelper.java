@@ -10,7 +10,7 @@ public class AuthHelper {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetail customUserDetail = (CustomUserDetail) authentication.getPrincipal();
-        return  customUserDetail.getUserId();
+        return customUserDetail.getUserId();
 
     }
 }
