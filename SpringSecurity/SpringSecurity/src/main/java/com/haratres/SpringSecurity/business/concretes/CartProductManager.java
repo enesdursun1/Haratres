@@ -1,12 +1,13 @@
 package com.haratres.SpringSecurity.business.concretes;
 
 import com.haratres.SpringSecurity.business.abstracts.CartProductService;
+import com.haratres.SpringSecurity.business.abstracts.CartService;
 import com.haratres.SpringSecurity.business.abstracts.ProductService;
 import com.haratres.SpringSecurity.business.abstracts.UserService;
+import com.haratres.SpringSecurity.business.dtos.cart.UpdateCartRequest;
 import com.haratres.SpringSecurity.business.dtos.cartProduct.*;
 import com.haratres.SpringSecurity.business.dtos.product.GetByIdProductRequest;
 import com.haratres.SpringSecurity.business.dtos.product.GetByIdProductResponse;
-import com.haratres.SpringSecurity.business.rules.CartBusinessRules;
 import com.haratres.SpringSecurity.business.rules.CartProductBusinessRules;
 import com.haratres.SpringSecurity.core.helpers.auth.AuthHelper;
 import com.haratres.SpringSecurity.core.utilites.mapping.ModelMapperService;
@@ -15,7 +16,6 @@ import com.haratres.SpringSecurity.dataAccess.abstracts.CartProductDal;
 import com.haratres.SpringSecurity.entities.concretes.Cart;
 import com.haratres.SpringSecurity.entities.concretes.CartProduct;
 import com.haratres.SpringSecurity.entities.concretes.User;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
@@ -38,6 +38,7 @@ public class CartProductManager implements CartProductService {
     private CartProductBusinessRules cartProductBusinessRules;
     @Autowired
     private CartDal cartDal;
+
 
     @Override
     public List<GetAllCartProductResponse> getAll() {
@@ -70,7 +71,12 @@ public class CartProductManager implements CartProductService {
         setCartWhenInserted(cartProduct,user);
         setPrice(createCartProductRequest.getProductId(), cartProduct);
 
+
+
+
         CartProduct createdCartProduct = cartProductDal.save(cartProduct);
+
+        cartTotalPriceUpdate();
 
         CreatedCartProductResponse response = this.modelMapperService.forResponse().map(createdCartProduct, CreatedCartProductResponse.class);
         return response;
@@ -88,6 +94,9 @@ public class CartProductManager implements CartProductService {
         setCartWhenUpdated(cartProduct);
 
         CartProduct updatedCartProduct= cartProductDal.save(cartProduct);
+
+        cartTotalPriceUpdate();
+
         UpdatedCartProductResponse response = this.modelMapperService.forResponse().map(updatedCartProduct, UpdatedCartProductResponse.class);
 
         return response;
@@ -99,6 +108,8 @@ public class CartProductManager implements CartProductService {
         cartProductBusinessRules.cartProductShouldBeExistWhenSelected(deleteCartProductRequest.getCartProductId());
 
         cartProductDal.deleteById(deleteCartProductRequest.getCartProductId());
+
+        cartTotalPriceUpdate();
     }
 
     @Override
@@ -151,6 +162,8 @@ public class CartProductManager implements CartProductService {
         cartProduct.getProduct().getPrice().setPrice(response.getPrice().getPrice());
         cartProduct.setTotalPrice();
 
+
+
     }
 
     private void setCartWhenInserted(CartProduct cartProduct,User user){
@@ -162,15 +175,20 @@ public class CartProductManager implements CartProductService {
             Cart newCart= new Cart(user);
             cartProduct.setCart(newCart);
             cartDal.save(newCart);
+
         }
 
 
         else cartProduct.setCart(cart);
 
+
+
+
     }
-    private void setCartWhenUpdated(CartProduct cartProduct){
+     private void setCartWhenUpdated(CartProduct cartProduct){
 
          cartProduct.setCart(cartDal.getByUser_UserId(findUser().getUserId()));
+
 
     }
 
@@ -185,6 +203,24 @@ public class CartProductManager implements CartProductService {
       Cart cart = cartDal.getByUser_UserId(userId);
       return  cartProductDal.findByProduct_ProductIdAndCart_CartId(productId,cart.getCartId());
 
+
+    }
+
+
+    public void cartTotalPriceUpdate() {
+
+        Cart cart = cartDal.getByUser_UserId(findUser().getUserId());
+
+        List<GetListByCartIdCartProductResponse> response = getListByCartId(cart.getCartId());
+
+        BigDecimal totalPrice = BigDecimal.ZERO;
+
+        for (GetListByCartIdCartProductResponse getListByCartIdCartProductResponse : response) {
+            totalPrice = totalPrice.add(getListByCartIdCartProductResponse.getTotalPrice());
+        }
+        cart.setTotalPrice(totalPrice);
+
+        cartDal.save(cart);
 
     }
 

@@ -21,14 +21,7 @@ public class GetListByUserIdCartResponse {
         this.cartProducts = cartProducts;
     }
 
-    public void setTotalPrice() {
 
-        BigDecimal totalPrice = BigDecimal.ZERO;
-        for (GetListByCartIdCartProductResponse getListByCartIdCartProductResponse : cartProducts) {
-            totalPrice = totalPrice.add(getListByCartIdCartProductResponse.getTotalPrice());
-        }
-        this.totalPrice = totalPrice;
-    }
 
 
 }

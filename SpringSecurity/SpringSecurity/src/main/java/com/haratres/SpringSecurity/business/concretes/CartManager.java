@@ -84,14 +84,15 @@ public class CartManager implements CartService {
     public GetListByUserIdCartResponse getListByUserId() {
 
         int userId = AuthHelper.getuserId();
+        Cart cart = cartDal.getByUser_UserId(userId);
 
         cartBusinessRules.cartShouldBeExistsWhenSelected(userId);
 
       List<GetListByCartIdCartProductResponse> getListByCartIdCartProductResponse =
-              cartProductService.getListByCartId(cartDal.getByUser_UserId(userId).getCartId());
+              cartProductService.getListByCartId(cart.getCartId());
 
      GetListByUserIdCartResponse response = new GetListByUserIdCartResponse(getListByCartIdCartProductResponse);
-     response.setTotalPrice();
+     response.setTotalPrice(cart.getTotalPrice());
 
         return response;
 
@@ -107,6 +108,7 @@ public class CartManager implements CartService {
 
         Cart cart = cartDal.getByUser_UserId(userId);
         cartProductService.deleteByCartId(cart.getCartId());
+        cartDal.deleteByUser_UserId(userId);
 
     }
 }

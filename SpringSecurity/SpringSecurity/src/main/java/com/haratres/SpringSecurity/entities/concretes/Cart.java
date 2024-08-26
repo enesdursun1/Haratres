@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -26,7 +27,8 @@ public class Cart {
     @JoinColumn(name="userId")
     private User user;
 
-
+    @Column(name = "totalPrice")
+    private BigDecimal totalPrice;
 
     public Cart(User user) {
 
